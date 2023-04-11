@@ -1,0 +1,71 @@
+package springboot.thymeleafajax.demo.mongomodel;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+
+@Document(collection="Book")
+public class Texts {
+	@Field
+	private String allTexts;
+	
+
+	public String getAllTexts() {
+		return allTexts;
+	}
+
+	public void setAllTexts(String allTexts) {
+		this.allTexts = allTexts;
+	}
+
+	@Field
+	private String enteredText;
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return super.toString();
+	}
+
+	
+
+	public String getEnteredText() {
+		return enteredText;
+	}
+
+	public void setEnteredText(String enteredText) {
+		this.enteredText = enteredText;
+	}
+
+	
+
+	@Field
+	private String mergedText;
+
+
+
+public String getMergedText() {
+		return mergedText;
+	}
+
+	public void setMergedText(String mergedText) {
+		this.mergedText = mergedText;
+	}
+
+
+
+public Texts(String enteredText, String mergedText) {
+	super();
+	this.enteredText = enteredText;
+	this.mergedText = mergedText;
+}
+
+public Texts(String allTexts, String enteredText, String mergedText) {
+	super();
+	this.allTexts = allTexts;
+	this.enteredText = enteredText;
+	this.mergedText = mergedText;
+}
+
+
+}

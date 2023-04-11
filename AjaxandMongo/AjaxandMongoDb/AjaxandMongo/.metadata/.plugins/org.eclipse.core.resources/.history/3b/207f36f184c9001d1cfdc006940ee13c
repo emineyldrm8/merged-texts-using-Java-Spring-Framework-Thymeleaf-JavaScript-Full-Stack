@@ -1,0 +1,179 @@
+package springboot.thymeleafajax.demo.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+import springboot.thymeleafajax.demo.AjaxResponseBody;
+import springboot.thymeleafajax.demo.KullaniciForm;
+import springboot.thymeleafajax.demo.model.Kullanici;
+import springboot.thymeleafajax.demo.mongomodel.Book;
+import springboot.thymeleafajax.demo.mongorepo.Bookrepo;
+import springboot.thymeleafajax.demo.service.KullaniciService;
+
+import javax.validation.Valid;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@RestController
+public class HomeRestController {
+	 public int kelime(String metin, String metin2) {
+	        
+	        int counter = 0;
+	        if(metin.length()>metin2.length())
+	        {
+	        	String karsilastirmametni=metin.substring(0,metin2.length()-1);
+	        	if( karsilastirmametni!=null)
+	        	{
+	        		return 1;
+	        	}
+	        }
+	        if(metin2.length()>metin.length())
+	        {
+	        	String karsilastirmametni=metin.substring(0,metin.length()-1);
+	        	if(karsilastirmametni!=null)
+	        	{
+	        		return 1;
+	        	}
+	        }
+	      
+	        if(metin2.length()==metin.length())
+	        {
+	        	String karsilastirmametni=metin.substring(0,metin.length()-1);
+	        	if(karsilastirmametni!=null)
+	        	{
+	        		return 1;
+	        	}
+	        }
+	      
+
+	        return 0;
+
+	    }
+
+	private static final Object[] Bookrepo = null;
+	Bookrepo bookrepo;
+	List<Bookrepo> listbookrepo;
+	List<Book> booklist;
+
+	public HomeRestController(Bookrepo bookrepo) {
+		super();
+		this.bookrepo = bookrepo;
+	}
+
+	private KullaniciService kullaniciService;
+	
+	@Autowired
+	public void setKullaniciService(KullaniciService kullaniciService) {
+		this.kullaniciService = kullaniciService;
+	}
+
+	@PostMapping("/kullanici")
+    public ResponseEntity<?> getSearchResultViaAjax(@Valid @RequestBody KullaniciForm kullaniciForm, Errors hata) {
+
+        AjaxResponseBody result = new AjaxResponseBody();
+        KullaniciForm kullanici=new KullaniciForm();
+       
+        List<Kullanici> kullaniciList = kullaniciService.veriAl(kullaniciForm);
+      
+       
+        if (kullaniciList.isEmpty()) {
+            result.setMesaj("sorun olustu");
+        } else {
+            result.setMesaj("basarili");
+        }
+
+        result.setSonuc(kullaniciList);
+        int i;
+      
+                String[] tumkelimeler=null;
+        		String ad=kullaniciList.get(0).getAd(); 
+        		String soyad=kullaniciList.get(0).getSoyad(); 
+        		//tum kelimeler soyadda
+        		//buradaki bosluk degişkenlerini "-" ile degidtereceğim
+        		String kullan=soyad.replace(' ', '-');
+        		tumkelimeler=kullan.split("-");
+        		//su an tum kelimeler burda
+        		 List<String> birlesmisDizi = new ArrayList<>();
+        		 for (String string : tumkelimeler) {
+        	            if (!birlesmisDizi.contains(string)) {
+        	                birlesmisDizi.add(string);
+        	            }
+        	        }
+        		
+        		   int j, k;
+        	        for (j = 0; j < birlesmisDizi.size(); j++) {
+
+        	            for (k = birlesmisDizi.size() - 1; k > j; k--) {
+
+        	                String kelime1 = birlesmisDizi.get(j);
+        	                String kelime2 = birlesmisDizi.get(k);
+        	                int sonuc = kelime(kelime1, kelime2);//sonuc onden eslesenler,arka için isleme gerek yok
+        	                if (kelime1.length() > kelime2.length())//uzun olanı listeden sil
+        	                {
+        	                    if (sonuc > 0) {
+
+        	                     //  birlesmisDizi.remove(k);
+        	                    	  birlesmisDizi.set(j," ");
+        	                    }
+        	                   
+        	                } 
+        	            }}
+        	             for (j = 0; j < birlesmisDizi.size(); j++) {
+
+        	            for (k = birlesmisDizi.size() - 1; k > j; k--) {
+
+        	                String kelime1 = birlesmisDizi.get(j);
+        	                String kelime2 = birlesmisDizi.get(k);
+        	                int sonuc = kelime(kelime1, kelime2);//sonuc onden eslesenler,arka için isleme gerek yok
+        	                if (kelime1.length() <kelime2.length())//uzun olanı listeden sil
+        	                {
+        	                    if (sonuc > 0) {
+
+        	                      // birlesmisDizi.remove(j);
+        	                      birlesmisDizi.set(k," ");
+        	                    }
+        	                    
+        	                    
+        	                } 
+        	            }
+
+        	        }
+        	             
+        	    
+        	        for(String s:birlesmisDizi)
+        	        {
+        	            System.out.println(s);
+        	    }
+
+        		
+        		int kelime=Integer.parseInt(ad);
+        		String[] strArray= new String[kelime];
+        		strArray=soyad.split("-");
+        		String[] sayi= new String[kelime];
+        		for(int a=0;a<kelime;a++)
+        		{
+        			sayi[a]=ad;
+        		}
+        		
+        	
+        		for (j = 0; j< kelime; j++){  
+        		String girilenkelime=strArray[j];
+        		String number=sayi[j];
+        		bookrepo.save(new Book(ad,girilenkelime));}
+        
+                return ResponseEntity.ok(result);
+        
+
+    }
+	
+	
+	
+
+}

@@ -1,0 +1,315 @@
+package springboot.thymeleafajax.demo.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
+import springboot.thymeleafajax.demo.AjaxResponseBody;
+import springboot.thymeleafajax.demo.KullaniciForm;
+import springboot.thymeleafajax.demo.model.Kullanici;
+import springboot.thymeleafajax.demo.mongomodel.Book;
+import springboot.thymeleafajax.demo.mongorepo.Bookrepo;
+import springboot.thymeleafajax.demo.service.KullaniciService;
+
+import javax.validation.Valid;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@RestController
+
+public class HomeRestController {
+	public long bas= System.nanoTime();
+	long bit = 0;
+	public double sure;
+	public double toplamsure;
+	   private String eslesme=" ";
+		//yni sayida harf girildiyse sıkıntı babus
+		 public String tekgirdiler(String metin,String metin2)
+		 {
+			   
+		        metin.toLowerCase();
+		       
+		       String[] dizi = null;
+		       dizi = metin.split("");
+		                
+		        metin2.toLowerCase();
+		        String[] dizi2 = null;
+		        dizi2 = metin2.split("");
+		       
+		           
+		            
+		          char[] first  = metin.toLowerCase().toCharArray();
+		char[] second = metin2.toLowerCase().toCharArray();
+		int counter = 0;
+		int minLength = Math.min(first.length, second.length);
+		int maxLength = Math.max(first.length, second.length);
+		  int terscounter = 0;
+		   List<Character> birlesmisDizi = new ArrayList<>();
+		//birinci 2.den uzunsa okeyiz
+		for(int i = 0; i < minLength; i++)
+		{
+		        if (first[i] == second[i] )
+		        { 
+		            birlesmisDizi.add(first[i]);
+		            counter++;  
+		            
+		        }
+		 }
+		for(int i = maxLength; i >=0; i--)
+		{
+		 if ( (first.length-1-i)>=0 &&(second.length-1-i)>=0)
+		        { if(first[first.length-1-i] == second[second.length-1-i])
+		        {
+		             birlesmisDizi.add(first[first.length-1-i]);
+		            terscounter++;    
+		        }
+		}
+		}
+
+
+		 
+		        System.out.println("eslesen onden  karakter="+counter);
+		        System.out.println("eslesen arkaden  karakter="+terscounter);
+		       for (Character ch: birlesmisDizi) {
+		            System.out.print(ch+ " ");
+		           
+		        }
+		        
+		       StringBuilder sb = new StringBuilder();
+		        
+		        // Appends characters one by one
+		        for (Character ch : birlesmisDizi) {
+		            sb.append(ch);
+		        }
+		 
+		        // convert in string
+		        String eslesmisstring = sb.toString();
+		        return eslesmisstring;
+		 }
+
+	   
+	
+	
+
+	public int kelime(String metin, String metin2) {
+	        metin.toLowerCase();
+
+	        String[] dizi = null;
+	        dizi = metin.split(" ");
+
+	        metin2.toLowerCase();
+	        String[] dizi2 = null;
+	        dizi2 = metin2.split(" ");
+
+	        char[] first = metin.toLowerCase().toCharArray();
+	        char[] second = metin2.toLowerCase().toCharArray();
+	        int counter = 0;
+	        int minLength = Math.min(first.length, second.length);
+	        int maxLength = Math.max(first.length, second.length);
+	        int terscounter = 0;
+	        List<Character> birlesmisDizi = new ArrayList<>();
+	//birinci 2.den uzunsa okeyiz
+	        for (int i = 0; i < minLength; i++) {
+	            if (first[i] == second[i]) {
+	                birlesmisDizi.add(first[i]);
+	                counter++;
+	                
+
+	            }
+	        }
+	        if(counter==minLength)
+	        {
+	            return counter;
+	        }
+	   
+
+	       
+	       
+	       
+	        return 0;
+
+	    }
+
+	private static final Object[] Bookrepo = null;
+	Bookrepo bookrepo;
+	List<Bookrepo> listbookrepo;
+	List<Book> booklist;
+	 AjaxResponseBody result = new AjaxResponseBody();
+
+	public HomeRestController(Bookrepo bookrepo) {
+		super();
+		this.bookrepo = bookrepo;
+	}
+
+	private KullaniciService kullaniciService;
+	
+	@Autowired
+	public void setKullaniciService(KullaniciService kullaniciService) {
+		this.kullaniciService = kullaniciService;
+	}
+
+	
+	 public  String removePunctuations(String source) {
+	        return source.replaceAll("[!\"#$%&'()*+,./:;<=>?@\\[\\]^_`{|}~]"," ");
+	    }
+	@PostMapping("/kullanici")
+   public ResponseEntity<?> getSearchResultViaAjax(@Valid @RequestBody KullaniciForm kullaniciForm, Errors hata) {
+	
+        AjaxResponseBody result = new AjaxResponseBody();
+        KullaniciForm kullanici=new KullaniciForm();
+       
+        List<Kullanici> kullaniciList = kullaniciService.getDataInUserForm(kullaniciForm);
+      
+       
+        if (kullaniciList.isEmpty()) {
+            result.setMessage(eslesme);
+        } else {
+            result.setMessage(eslesme);
+        }
+
+        result.setResult(kullaniciList);
+        int i;
+      
+                String[] tumkelimeler=null;
+        		String ad=kullaniciList.get(0).getEnterednumber(); 
+        		String soyad=kullaniciList.get(0).getAllTexts(); 
+        		soyad=removePunctuations(soyad);
+        		//tum kelimeler soyadda
+        		//buradaki bosluk degişkenlerini "-" ile degidtereceğim
+        		String kullan=soyad.replace(' ', '-');
+        		tumkelimeler=kullan.split("-");
+        		//su an tum kelimeler burda
+        		   int j, k;
+        		 List<String> birlesmisDizi = new ArrayList<>();
+        		 for (String string : tumkelimeler) {
+        	            if (!birlesmisDizi.contains(string)) {
+        	                birlesmisDizi.add(string);
+        	            }
+        	        }
+        		 List<String> birlesmistekDizi= Arrays.asList(tumkelimeler);
+        		 //her kutuya sadece bir kelime yazılırsa
+        		if(tumkelimeler.length== Integer.parseInt(ad) )
+        		{ for (j = 0; j < birlesmistekDizi.size(); j++) {
+
+    	            for (k = birlesmistekDizi.size() - 1; k > j; k--) {
+    	            	
+    	            	
+    	            	String kelime1 = birlesmistekDizi.get(j);
+    	                String kelime2 = birlesmistekDizi.get(k);
+    	                
+    	              //tek kelime girdiyse hesap için yazılan fonksionu çağıralım
+    	           eslesme=tekgirdiler(kelime1,kelime2);
+    	               System.out.println(eslesme);
+    	            
+    	           	
+    	            	
+    	            }
+    	            }
+        	
+        		
+        			
+        		}
+        		
+        		
+        	        for (j = 0; j < birlesmisDizi.size(); j++) {
+
+        	            for (k = birlesmisDizi.size() - 1; k > j; k--) {
+
+        	                String kelime1 = birlesmisDizi.get(j);
+        	                String kelime2 = birlesmisDizi.get(k);
+        	                int sonuc = kelime(kelime1, kelime2);//sonuc onden eslesenler,arka için isleme gerek yok
+        	                if (kelime1.length() > kelime2.length())//uzun olanı listeden sil
+        	                {
+        	                    if (sonuc > 0) {
+
+        	                      birlesmisDizi.remove(k);
+        	                    	//  birlesmisDizi.set(j," ");
+        	                    }
+        	                   
+        	                } 
+        	            }}
+        	             for (j = 0; j < birlesmisDizi.size(); j++) {
+
+        	            for (k = birlesmisDizi.size() - 1; k > j; k--) {
+
+        	                String kelime1 = birlesmisDizi.get(j);
+        	                String kelime2 = birlesmisDizi.get(k);
+        	                int sonuc = kelime(kelime1, kelime2);//sonuc onden eslesenler,arka için isleme gerek yok
+        	                if (kelime1.length() <kelime2.length())//uzun olanı listeden sil
+        	                {
+        	                    if (sonuc > 0) {
+
+        	                      birlesmisDizi.remove(j);
+        	                    //  birlesmisDizi.set(k," ");
+        	                    }
+        	                    
+        	                    
+        	                } 
+        	            }
+
+        	        }
+        	             
+        	    
+        	        for(String s:birlesmisDizi)
+        	        {
+        	            System.out.println(s);
+        	    }
+             // tum kelimeler ok
+        	        eslesme= birlesmisDizi.stream()
+        	        	      .map(n -> String.valueOf(n))
+        	        	      .collect(Collectors.joining(" ", "", ""));
+        	        	 
+        	        	    System.out.println(result);
+        	        	    
+        		int kelime=Integer.parseInt(ad);
+        		String[] strArray= new String[kelime];
+        		strArray=soyad.split("-");//strarrayde tum kelimelerim var
+        		String[] sayi= new String[kelime];
+        		for(int a=0;a<kelime;a++)
+        		{
+        			sayi[a]=ad;
+        		}
+        		
+        	
+        	for (j = 0; j< kelime; j++){  
+        		String girilenkelime=strArray[j];
+        		bookrepo.save(new Book(soyad,girilenkelime,eslesme));}
+        	   result.setMessage(eslesme);
+        	   bit = System.nanoTime();;
+   			sure = (bit - bas)/1000000000;
+   			toplamsure=sure-toplamsure;
+          
+                return ResponseEntity.ok(result);
+        
+
+    }
+	@RequestMapping(value="/Book", method = RequestMethod.GET)
+	public List<Book> getBooks() {
+	    return this.bookrepo.findAll();
+	}
+	@GetMapping("/")
+    public ModelAndView  index(ModelAndView modelandview) {
+		
+		String gonder=eslesme;
+		String suregonder=String.valueOf(Math.abs(toplamsure));
+    modelandview.setViewName("index.html");
+    	modelandview.addObject("name",gonder);
+    	modelandview.addObject("sure",suregonder);
+        return modelandview;
+    }
+	
+	
+
+}

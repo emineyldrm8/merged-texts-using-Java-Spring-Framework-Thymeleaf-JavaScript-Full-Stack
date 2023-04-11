@@ -1,0 +1,191 @@
+package springboot.thymeleafajax.demo.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+import springboot.thymeleafajax.demo.AjaxResponseBody;
+import springboot.thymeleafajax.demo.KullaniciForm;
+import springboot.thymeleafajax.demo.model.Kullanici;
+import springboot.thymeleafajax.demo.mongomodel.Book;
+import springboot.thymeleafajax.demo.mongorepo.Bookrepo;
+import springboot.thymeleafajax.demo.service.KullaniciService;
+
+import javax.validation.Valid;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@RestController
+public class HomeRestController {
+   
+
+	private static final Object[] Bookrepo = null;
+	Bookrepo bookrepo;
+	List<Bookrepo> listbookrepo;
+	List<Book> booklist;
+	
+	public int benzerlikkelime(String metin, String metin2) {
+        metin.toLowerCase();
+
+        String[] dizi = null;
+        dizi = metin.split(" ");
+
+        metin2.toLowerCase();
+        String[] dizi2 = null;
+        dizi2 = metin2.split(" ");
+
+        char[] first = metin.toLowerCase().toCharArray();
+        char[] second = metin2.toLowerCase().toCharArray();
+        int counter = 0;
+        int minLength = Math.min(first.length, second.length);
+        int maxLength = Math.max(first.length, second.length);
+        int terscounter = 0;
+        List<Character> birlesmisDizi = new ArrayList<>();
+        for (int i = 0; i < minLength; i++) {
+            if (first[i] == second[i]) {
+                birlesmisDizi.add(first[i]);
+                counter++;
+
+            }
+        
+
+        System.out.println("eslesen onden  karakter=" + counter);
+        if (counter > 0) {//iki metin arasi benzerlik var
+           /* String string = birlesmisDizi.stream()
+                    .map(String::valueOf)
+                    .collect(Collectors.joining());*/
+            return counter;
+        }
+
+       
+    }
+		return 0;}
+
+	public HomeRestController(Bookrepo bookrepo) {
+		super();
+		this.bookrepo = bookrepo;
+	}
+
+	private KullaniciService kullaniciService;
+	
+	@Autowired
+	public void setKullaniciService(KullaniciService kullaniciService) {
+		this.kullaniciService = kullaniciService;
+	}
+
+	@PostMapping("/kullanici")
+    public ResponseEntity<?> getSearchResultViaAjax(@Valid @RequestBody KullaniciForm kullaniciForm, Errors hata) {
+
+        AjaxResponseBody result = new AjaxResponseBody();
+        KullaniciForm kullanici=new KullaniciForm();
+        //kullanici.getAd();
+        List<Kullanici> kullaniciList = kullaniciService.veriAl(kullaniciForm);
+      
+       
+       //  kulaniciList.forEach((n) -> System.out.println(n));
+        //.forEach((n) -> System.out.println(n));*/
+        if (kullaniciList.isEmpty()) {
+            result.setMesaj("sorun olustu");
+        } else {
+            result.setMesaj("basarili");
+        }
+
+        result.setSonuc(kullaniciList);
+        int i,j,k;
+      
+        
+        		String ad=kullaniciList.get(0).getAd(); 
+        		String soyad=kullaniciList.get(0).getSoyad(); 
+        		
+        		int kelime=Integer.parseInt(ad);
+        		String[] strArray= new String[kelime];
+        		 List<String> birlesmisDizi = new ArrayList<>();
+        		 
+        		strArray=soyad.split("-");//işlemler bu strinde yapılacak
+        		for (String string : strArray) {
+    	            if (!birlesmisDizi.contains(string)) {
+    	                birlesmisDizi.add(string);
+    	            }
+    	        }
+
+        		String[] sayi= new String[kelime];
+        		for(int a=0;a<kelime;a++)
+        		{
+        			sayi[a]=ad;
+        		}
+        		
+        	
+        		for (j = 0; j< kelime; j++){  
+        		String girilenkelime=strArray[j];
+        		String number=sayi[j];
+        		bookrepo.save(new Book(ad,girilenkelime));
+        		}
+        		for(String s:birlesmisDizi)
+    	        {
+    	            System.out.println(s);
+    	    }
+        		List<String> strArraylist = Arrays.asList(strArray);   
+        	    
+        		/*  for (j = 0; j < birlesmisDizi.size(); j++) {
+
+        	            for (k = birlesmisDizi.size() - 1; k > j; k--) {
+
+        	                String kelime1 = birlesmisDizi.get(j);
+        	                String kelime2 = birlesmisDizi.get(k);
+        	                int sonuc = benzerlikkelime(kelime1, kelime2);//sonuc onden eslesenler,arka için isleme gerek yok
+        	                if (kelime1.length() > kelime2.length())//uzun olanı listeden sil
+        	                {
+        	                    if (sonuc > 0) {
+
+        	                        birlesmisDizi.remove(k);
+        	                    }
+        	                } 
+        	            }}
+        	             for (j = 0; j < birlesmisDizi.size(); j++) {
+
+        	            for (k =j+1; k > j; k++) {
+
+        	                String kelime1 = birlesmisDizi.get(j);
+        	                String kelime2 = birlesmisDizi.get(k);
+        	                int sonuc = benzerlikkelime(kelime1, kelime2);//sonuc onden eslesenler,arka için isleme gerek yok
+        	                if (kelime1.length() <kelime2.length())//uzun olanı listeden sil
+        	                {
+        	                    if (sonuc > 0) {
+
+        	                        birlesmisDizi.remove(j);
+        	                    }
+        	                } 
+        	            }}
+
+        	        
+        	    for(String s:birlesmisDizi)
+        	        {
+        	            System.out.println(s);
+        	    }*/
+        	    
+
+  
+        	       
+
+        	      
+        	
+        		
+        		
+        		
+  
+        return ResponseEntity.ok(result);
+        
+
+    }
+	
+	
+
+
+}

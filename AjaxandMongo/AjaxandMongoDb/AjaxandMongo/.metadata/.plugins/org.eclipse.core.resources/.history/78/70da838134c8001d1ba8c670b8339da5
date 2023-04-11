@@ -1,0 +1,113 @@
+
+ function generate() {
+        var a = parseInt(document.getElementById("nochapter").value);
+        let ch = document.getElementById("ch");
+        const kelimelistesi = [];
+
+        ch.innerHTML = "";
+
+        for (i = 0; i < a; i++) {
+          let li = `
+                         <div id="added-text">
+                        <div class="d-flex flex-column bg-light p-3 mb-3">
+                          <textarea id="${i}" name="added-text" rows="4" cols="50"></textarea>
+                        </div>
+                        </div>
+
+
+                `;
+
+          ch.insertAdjacentHTML("beforeend", li);
+        }
+      }
+
+      function combination() {
+        var a = parseInt(document.getElementById("nochapter").value);
+
+        const kelimelistesi = [];
+        const chler = [];
+        for (i = 0; i < a; i++) {
+          chler[i] = document.getElementById("ch").value;
+        }
+        /* for (i = 0; i < a; i++) {
+            let sonuc;
+            sonuc = document.getElementById(a).value;
+            kelimelistesi[i] = sonuc;
+          }*/
+        let ch = document.getElementById("end");
+
+        /*for (i = 0; i < 1; i++) {
+          let li = `
+
+                <div class="d-flex flex-column bg-light p-3 mb-3">
+                  <h1>SONUÇ</h1>
+                  <textarea id="sonuc-yaz" name="sonuc-yaz" rows="4" cols="50"></textarea>
+                </div>
+
+        `;*/
+
+        var i;
+        for (i = 0; i < a; i++) {
+          var istring = i.toString();
+          var girilentext = document.getElementById(istring).value;
+          kelimelistesi[i] = girilentext;
+        }
+        let tummetinler = kelimelistesi.join("\n");
+        var secilenID = document.getElementById("your_textarea");
+        secilenID.value = tummetinler;
+        var array = tummetinler.split(",");
+        $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: "/kullanici",
+            data: JSON.stringify(array),
+            dataType: 'json',
+            cache: false,
+            timeout: 600000,
+            success: function (data) {
+
+                var json = "Ajax Cevap"
+                    + JSON.stringify(data, null, 4);
+                $('#feedback').html(json);
+
+            },
+            error: function (e) {
+
+                var json = "Ajax Hata"
+                    + e.responseText;
+                $('#feedback').html(json);
+
+
+            }
+        });
+      }
+      
+       
+       /* $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: "/kullanici",
+            data: JSON.stringify(tummetinler),
+            dataType: 'json',
+            cache: false,
+            timeout: 600000,
+            success: function (data) {
+
+                var json = "Ajax Cevap"
+                    + JSON.stringify(data, null, 4);
+                $('#feedback').html(json);
+
+            },
+            error: function (e) {
+
+                var json = "Ajax Hata"
+                    + e.responseText;
+                $('#feedback').html(json);
+
+
+            }
+        });*/
+
+   
+
+

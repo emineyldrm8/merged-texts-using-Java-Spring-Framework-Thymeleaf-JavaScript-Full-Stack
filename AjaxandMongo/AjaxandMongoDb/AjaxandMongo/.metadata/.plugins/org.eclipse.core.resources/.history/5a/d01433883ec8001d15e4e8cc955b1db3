@@ -1,0 +1,5 @@
+package springboot.thymeleafajax.demo.mongomodel;
+
+public class Book {
+
+}

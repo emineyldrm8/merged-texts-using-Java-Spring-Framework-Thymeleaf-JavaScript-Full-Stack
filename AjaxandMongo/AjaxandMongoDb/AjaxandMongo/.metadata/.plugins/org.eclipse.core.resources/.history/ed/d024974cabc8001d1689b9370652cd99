@@ -1,0 +1,47 @@
+package springboot.thymeleafajax.demo.mongomodel;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+
+@Document(collection="Book")
+public class Book {
+	@Id
+	private String bookname;
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return super.toString();
+	}
+
+	public String getBookname() {
+		return bookname;
+	}
+
+	public void setBookname(String bookname) {
+		this.bookname = bookname;
+	}
+
+	public String getYazar() {
+		return yazar;
+	}
+
+	public void setYazar(String yazar) {
+		this.yazar = yazar;
+	}
+
+	@Field
+	private String yazar;
+
+public int Total() {
+return 12;
+}
+
+public Book(String bookname, String yazar) {
+	super();
+	this.bookname = bookname;
+	this.yazar = yazar;
+}
+
+}

@@ -1,0 +1,5 @@
+package springboot.thymeleafajax.demo.mongorepo;
+
+public class Bookrepo {
+
+}

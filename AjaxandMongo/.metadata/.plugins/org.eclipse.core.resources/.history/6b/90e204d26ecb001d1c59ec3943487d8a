@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>MERGED TEXTS</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <link rel="stylesheet" type="text/css"
+          href="webjars/bootstrap/3.3.7/css/bootstrap.min.css"/>
+</head>
+<body>
+
+ <nav class="navbar navbar-expand-md navbar-dark">
+      <div class="container">
+        <a href="index.html" class="navbar-brand">
+          <i class="fa-solid fa-house">METİNLERİ BİRLEŞTİRMEYİ MERGEDTEXTS.COM İLE DENEYİN!</i>
+         
+        </a>
+        
+      </div>
+    </nav>
+    <div class="container"> <div class="row">
+      <div class="time">
+        <i class='fas fa-clock' style='font-size:30px;color:red'>İŞTE TOPLAM SÜRE:</i>
+      </div>
+      <div class="col-sm-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">METİNLERİ BİRLEŞTİRİN</h5>
+           
+         
+    
+      <label><b>Öncelikle işlem yapılacak metin sayısını girin.</b></label>
+      <input type="text" id="nochapter" />
+      <input type="button" value="ONAYLAYIN" onclick="generate()" />
+      <input type="button" value="SAYFAYI TEMİZLEYİN" onclick="cleanpage()" />
+      <input
+          type="button"
+          value="KELİMELERİ BİRLEŞTİRİN"
+          onclick="combination()"
+        />
+      <div id="ch">
+        
+      </div>
+
+
+
+
+
+    </div>
+   
+    
+  </div>
+</div>
+<div class="col-sm-6">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">BİRLEŞMİŞ METİN</h5>
+     
+     <p th:text="${name}"></p>
+      
+</div>
+
+
+</div>
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+    <div id="end"></div>
+
+<script type="text/javascript"
+        src="webjars/jquery/2.2.4/jquery.min.js"></script>
+
+<script type="text/javascript" src="js/ajax.js"></script>
+
+</body>
+</html>

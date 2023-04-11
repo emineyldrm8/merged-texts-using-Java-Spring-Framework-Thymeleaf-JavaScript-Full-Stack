@@ -1,0 +1,380 @@
+package springboot.thymeleafajax.demo.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
+import springboot.thymeleafajax.demo.AjaxResponseBody;
+import springboot.thymeleafajax.demo.UserForm;
+import springboot.thymeleafajax.demo.model.User;
+import springboot.thymeleafajax.demo.mongomodel.Texts;
+import springboot.thymeleafajax.demo.mongorepo.TextsRepo;
+import springboot.thymeleafajax.demo.service.UserService;
+
+import javax.validation.Valid;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@RestController
+
+public class HomeRestController {
+	public long start= System.nanoTime();
+	long end= 0;
+	public double duration;
+	 int i,j,k;
+	 String enterednumber;
+		List<User> userList;
+		String allTexts;
+     
+	public double totalduration;
+	   private String mergedText=" ";
+		//yni sayida harf girildiyse sıkıntı babus
+		
+	   public String CalculateSimilarityforOneWords(String firstText,String secondText)
+		 {
+			   
+		        firstText=firstText.toLowerCase();
+		       
+		       String[] firstTextArr = null;
+		       firstTextArr= firstText.split("");
+		       secondText=secondText.toLowerCase();      
+		        
+		        String[] secondTextArr= null;
+		        secondTextArr= secondText.split("");
+		       
+		           
+		            
+		     char[] first  = firstText.toLowerCase().toCharArray();
+		char[] second = secondText.toLowerCase().toCharArray();
+		int counter = 0;
+		int minLength = Math.min(first.length, second.length);
+		int maxLength = Math.max(first.length, second.length);
+		  int inverseCounter = 0;
+		   List<Character> mergedTextArr= new ArrayList<>();
+		//birinci 2.den uzunsa okeyiz
+              if(first.length>second.length)
+              {
+		for(int i = 0; i < second.length; i++)
+		{
+		        if (first[i] == second[i] )
+		        { 
+		            
+		            mergedTextArr.add(second[i]);
+		            counter++;
+		        }
+                      else
+                      {
+                          mergedTextArr.add(second[i]);
+                      }
+                      
+                     
+		 }}
+                   
+             if(counter>0 && first.length>second.length)
+              {
+              for(int i = counter; i <first.length; i++)
+              {
+                  mergedTextArr.add(first[i]);
+              }
+               
+              
+              }
+             
+             
+             
+             
+             
+             
+              if(first.length<second.length)
+              {
+		for(int i = 0; i < first.length; i++)
+		{
+		        if (first[i] == second[i] )
+		        { 
+		            
+		            mergedTextArr.add(first[i]);
+		            counter++;
+		        }
+                      else
+                      {
+                          mergedTextArr.add(first[i]);
+                      }
+                      
+                     
+		 }}
+                   
+             if(counter>0 && first.length<second.length)
+              {
+              for(int i = counter; i <second.length; i++)
+              {
+                  mergedTextArr.add(second[i]);
+              }
+               
+              
+              }
+             
+             
+             
+              if(first.length==second.length)
+              {
+		for(int i = 0; i < first.length; i++)
+		{
+		        if (first[i] == second[i] )
+		        { 
+		            
+		            mergedTextArr.add(first[i]);
+		            counter++;
+		        }
+                      else
+                      {
+                          mergedTextArr.add(first[i]);
+                      }
+                      
+                     
+		 }}
+                   
+             if(counter>0 && first.length==second.length)
+              {
+              for(int i = counter; i <second.length; i++)
+              {
+                  mergedTextArr.add(second[i]);
+              }
+               
+              
+              }
+             
+
+		
+
+
+		 
+		        System.out.println("eslesen onden  karakter="+counter);
+		     
+		        
+		       StringBuilder stringBuilder = new StringBuilder();
+		        
+		        // Appends characters one by one
+		        for (Character ch :mergedTextArr) {
+		        	stringBuilder.append(ch);
+		        }
+		 
+		        // convert in string
+		        String matchedString= stringBuilder.toString();
+		        return matchedString;
+		 }
+	   
+	
+	
+
+	public int matchedCharacterCounter(String firstText, String secondText) {
+	        firstText=firstText.toLowerCase();
+
+	        String[] firstTextArr= null;
+	        firstTextArr= firstText.split(" ");
+
+	        secondText=secondText.toLowerCase();
+
+	        String[] secondTextArr= null;
+	        secondTextArr= secondText.split(" ");
+
+	        char[] first = firstText.toLowerCase().toCharArray();
+	        char[] second = secondText.toLowerCase().toCharArray();
+	        int counter = 0;
+	        int minLength = Math.min(first.length, second.length);
+	        int maxLength = Math.max(first.length, second.length);
+	        int terscounter = 0;
+	        List<Character> mergedTextArr=new ArrayList<>();
+	         //birinci 2.den uzunsa okeyiz
+	        for (int i = 0; i < minLength; i++) {
+	            if (first[i] == second[i]) {
+	               mergedTextArr.add(first[i]);
+	                counter++;
+	                
+
+	            }
+	        }
+	        if(counter==minLength)
+	        {
+	            return counter;
+	        }
+	   
+
+	       
+	       
+	       
+	        return 0;
+
+	    }
+
+	private static final Object[] TextsRepo = null;
+	TextsRepo textsRepo;
+	//List<TextsRepo> listbookrepo;
+    List<TextsRepo> listTextsRepo;
+	List<Texts> textsList;
+	 AjaxResponseBody result = new AjaxResponseBody();
+
+	public HomeRestController(TextsRepo textsRepo) {
+		super();
+		this.textsRepo=textsRepo;
+	}
+
+	private UserService userService;
+	
+	@Autowired
+	public void setUserService(UserService userService) {
+		this.userService = userService;
+	}
+
+   public  String removePunctuations(String source) {
+	        return source.replaceAll("[!\"#$%&'()*+,./:;<=>?@\\[\\]^_`{|}~]"," ");
+	    }
+	@PostMapping("/kullanici")
+   public ResponseEntity<?> getSearchResultViaAjax(@Valid @RequestBody UserForm userForm, Errors err) {
+	
+        AjaxResponseBody result = new AjaxResponseBody();
+        UserForm users=new UserForm();
+       
+      userList = userService.getDataInUserForm(userForm);
+      
+       
+                String[] enteredTexts=null;
+        		String enterednumber=userList.get(0).getEnterednumber(); 
+        		String allTexts=userList.get(0).getAllTexts(); 
+        		allTexts=removePunctuations(allTexts);
+        		//tum kelimeler allTextsde
+        		//buradaki bosluk degişkenlerini "-" ile degidtereceğim
+        		//boylece her kelime arasi - olur
+        		allTexts=allTexts.replace(' ','-');
+        		enteredTexts=allTexts.split("-");
+        		//su an tum kelimeler burda
+        		 
+        		 List<String> mergedTextsArr= new ArrayList<>();
+        		 for (String string :enteredTexts) {
+        	            if (!mergedTextsArr.contains(string)) {
+        	            	mergedTextsArr.add(string);
+        	            }
+        	        }
+        		 List<String> mergedOneWordsArr= Arrays.asList(enteredTexts);
+        		 //her kutuya sadece bir kelime yazılırsa
+        		if(enteredTexts.length== Integer.parseInt(enterednumber) )
+        		{ for (j = 0; j <mergedOneWordsArr.size(); j++) {
+
+    	            for (k = mergedOneWordsArr.size() - 1; k > j; k--) {
+    	            	
+    	            	
+    	            	String firstText= mergedOneWordsArr.get(j);
+    	                String secondText= mergedOneWordsArr.get(k);
+    	                
+    	              //tek kelime girdiyse hesap için yazılan fonksionu çağıralım
+    	           mergedText=CalculateSimilarityforOneWords(firstText,secondText);
+    	              
+    	            
+    	           	
+    	            	
+    	            }
+    	            }
+        	
+        		
+        			
+        		}
+        		else {
+        		
+        		
+        	        for (j = 0; j < mergedTextsArr.size(); j++) {
+
+        	            for (k =mergedTextsArr.size() - 1; k > j; k--) {
+
+        	                String firstText =mergedTextsArr.get(j);
+        	                String secondText = mergedTextsArr.get(k);
+        	                int numberofMatches =matchedCharacterCounter(firstText,secondText);//sonuc onden eslesenler,arka için isleme gerek yok
+        	                if (firstText.length() > secondText.length())//uzun olanı listeden sil
+        	                {
+        	                    if (numberofMatches> 0) {
+
+        	                    	mergedTextsArr.remove(k);
+        	                    	        	                    }
+        	                   
+        	                } 
+        	            }}
+        	             for (j = 0; j < mergedTextsArr.size(); j++) {
+
+        	            for (k = mergedTextsArr.size() - 1; k > j; k--) {
+
+        	            	 String firstText =mergedTextsArr.get(j);
+         	                String secondText = mergedTextsArr.get(k);
+        	                int numberofMatches = matchedCharacterCounter(firstText,secondText);//sonuc onden eslesenler,arka için isleme gerek yok
+        	                if (firstText.length() <secondText.length())//uzun olanı listeden sil
+        	                {
+        	                    if (numberofMatches > 0) {
+
+        	                    	mergedTextsArr.remove(j);
+        	                   
+        	                    }
+        	                    
+        	                    
+        	                } 
+        	            }
+
+        	        }
+        		}
+        	             
+             // tum kelimeler ok
+        	        mergedText= mergedTextsArr.stream()
+        	        	      .map(n -> String.valueOf(n))
+        	        	      .collect(Collectors.joining(" ", "", ""));
+        	        	 
+        	        	   
+        			    
+        		int number=Integer.parseInt(enterednumber);
+        		String[] strArray= new String[number];
+        		
+        		String[] sayi= new String[number];
+        		for(int a=0;a<number;a++)
+        		{
+        			
+					sayi[a]=enterednumber;
+        		}
+        		
+        	
+        	for (j = 0; j<number; j++){ 
+        		
+				String allTextsagain=userList.get(0).getAllTexts();
+        		strArray=allTextsagain.split("-");//strarrayde tum kelimelerim var
+        		String enteredText=strArray[j];
+        		
+				textsRepo.save(new Texts(allTexts,enteredText,mergedText));}
+        	   
+        	 end= System.nanoTime();;
+   			duration= (end - start)/1000000000;
+   			totalduration=duration-totalduration;
+          
+                return ResponseEntity.ok(result);
+        
+
+    }
+	
+	@GetMapping("/")
+    public ModelAndView  index(ModelAndView modelandview) {
+		String text=mergedText;
+		String durationText=String.valueOf(Math.abs(totalduration));
+        modelandview.setViewName("index.html");
+    	modelandview.addObject("name",text);
+    	modelandview.addObject("duration",durationText);
+        return modelandview;
+    }
+	
+	
+
+}

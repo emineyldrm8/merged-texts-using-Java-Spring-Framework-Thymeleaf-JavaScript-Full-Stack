@@ -1,0 +1,51 @@
+package springboot.thymeleafajax.demo.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import springboot.thymeleafajax.demo.AjaxResponseBody;
+import springboot.thymeleafajax.demo.UserForm;
+import springboot.thymeleafajax.demo.model.Kullanici;
+import springboot.thymeleafajax.demo.mongomodel.Book;
+import springboot.thymeleafajax.demo.mongorepo.Bookrepo;
+import springboot.thymeleafajax.demo.service.KullaniciService;
+
+@Controller
+@RequestMapping("/kullanici")
+public class HomeController {
+private KullaniciService kullaniciService;
+Bookrepo bookrepo;
+@Autowired
+public HomeController(Bookrepo bookrepo) {
+	super();
+	this.bookrepo = bookrepo;
+}
+	@Autowired
+	public void setKullaniciService(KullaniciService kullaniciService) {
+		this.kullaniciService = kullaniciService;
+	}
+    @GetMapping("/")
+    public String index() {
+        return "index";
+    }
+ 
+    public List<Kullanici> KullaniciListesiDondur(@RequestBody UserForm userForm  )
+	{ 
+        AjaxResponseBody result = new AjaxResponseBody();
+        UserForm kullanici=new UserForm();
+        
+        List<Kullanici> userList = kullaniciService.getDataInUserForm(userForm);
+      
+    
+		return userList;
+		
+	}
+    
+
+}

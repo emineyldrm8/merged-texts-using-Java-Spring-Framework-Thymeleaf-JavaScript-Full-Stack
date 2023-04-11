@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Spring Boot Thymeleaf AJAX Burak KUTBAY </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <link rel="stylesheet" type="text/css"
+          href="webjars/bootstrap/3.3.7/css/bootstrap.min.css"/>
+</head>
+<body>
+
+<div class="container" style="min-height: 500px">
+    
+    <nav class="navbar navbar-expand-md navbar-dark">
+      <div class="container">
+        <a href="index.html" class="navbar-brand">
+          <i class="fa-solid fa-house"></i>
+        </a>
+        <h1>METİNLERİ BİRLEŞTİRİN</h1>
+      </div>
+    </nav>
+    <div class="container">
+     <a href="second.html">sonuc</a>
+      <label><b>Öncelikle işlem yapılacak metin sayısını girin.</b></label>
+      <input type="text" id="nochapter" />
+      <input type="button" value="ONAYLAYIN" onclick="generate()" />
+      <input type="button" value="SAYFAYI TEMİZLEYİN" onclick="cleanpage()" />
+    </div>
+    <div id="ch"></div>
+    <div id="finish">
+      <input
+        type="button"
+        value="KELİMELERİ BİRLEŞTİRİN"
+        onclick="combination()"
+      />
+    </div>
+    <div id="end"></div>
+
+	<div id="feedback"></div>
+    </div>
+
+</div>
+
+<script type="text/javascript"
+        src="webjars/jquery/2.2.4/jquery.min.js"></script>
+
+<script type="text/javascript" src="js/ajax.js"></script>
+
+</body>
+</html>

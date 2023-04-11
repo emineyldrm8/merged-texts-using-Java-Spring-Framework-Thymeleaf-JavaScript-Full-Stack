@@ -1,0 +1,9 @@
+package springboot.thymeleafajax.demo.mongorepo;
+
+import org.springframework.data.mongodb.repository.MongoRepository;
+
+import springboot.thymeleafajax.demo.mongomodel.Texts;
+
+public interface Bookrepo extends MongoRepository<Texts,Integer>{
+
+}

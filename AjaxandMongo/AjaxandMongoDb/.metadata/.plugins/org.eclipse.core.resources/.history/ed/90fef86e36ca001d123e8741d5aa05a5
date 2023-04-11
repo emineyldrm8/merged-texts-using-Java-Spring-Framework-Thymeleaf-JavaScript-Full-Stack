@@ -1,0 +1,71 @@
+package springboot.thymeleafajax.demo.resource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import springboot.thymeleafajax.demo.mongomodel.Book;
+import springboot.thymeleafajax.demo.mongorepo.Bookrepo;
+
+@Controller
+public class BookController {
+	@Autowired
+	private Bookrepo repo;
+	
+
+/*@GetMapping("/index")
+public String ViewForm(Model model)
+{
+model.addAttribute("Book", new Book("emine","emeş"));
+return "index";
+}
+
+
+@PostMapping("/book")
+public String addForm(@ModelAttribute Book book,BindingResult result,Model model)
+{
+model.addAttribute("book",book);
+repo.save(book);
+return "index";
+}*/
+
+
+
+/*
+@PostMapping("/addbook")
+public String addForm(@ModelAttribute Book book,BindingResult result,Model model)
+{
+model.addAttribute("addbook",addbook);
+return "second";
+}
+
+	
+	@PostMapping("/addBook")
+	public String saveBook(@RequestBody Book book) {
+       repo.save(book);
+	return " kitap eklendi : "+book.getId();
+	}
+	
+	@GetMapping("/findAllBooks")
+	public List<Book> getBooks(){
+		return repo.findAll();
+	}
+	
+	@GetMapping("/findAllBooks/{id}")
+	public Optional<Book> getBook(@PathVariable int id) {
+		return repo.findById(id);
+	}
+
+	@DeleteMapping("/delete/{id}")
+	public String deleteBook(@PathVariable int id) {
+		repo.deleteById(id);
+		return "book deleted with id : " + id;
+	}
+	*/
+}
+
+
